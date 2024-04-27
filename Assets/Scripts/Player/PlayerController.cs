@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] public float speed;
     [SerializeField] public float jumpForce = 0.0f;
     [SerializeField] private float jumpForceThreshold = 15.0f;
-    //[SerializeField] private Camera cam;
 
-    //public AudioSource walkAudioSource;
+    //public AudioSource walkAudioSource;      //IGNORE small case COMMENTS FOR NOW, THOSE ARE FOR FUTURE SFX AND PLAYER ANIMATION    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     //public AudioSource jumpAudioSource;
     //public AudioSource landAudioSource;
     //public AudioSource flatAudioSource;
@@ -23,9 +23,14 @@ public class PlayerController : MonoBehaviour
     public bool preJump = false;
     public PhysicsMaterial2D bounceMat, normalMat;
     public ContactFilter2D groundContactFilter;
+    public Transform spawnPoint; // PLAYER SPAWN REF
+    public float respawnDelay = 1f; // PLAYER RESPAWN DELAY
+    private bool isAlive = true; // PLAYER HEALTH
+    private bool isRespawning = false; // RESPAWNING CHECK
 
     private int direction = 1;
     private bool wasGrounded = false;
+    private LevelManager levelManager; // LEVEL MANAGER REF
 
     void Start()
     {
@@ -33,6 +38,7 @@ public class PlayerController : MonoBehaviour
         gI = GetComponent<GatherInput>();
         //anim = GetComponent<Animator>();
         jumpScript = GetComponent<Jump>();
+        levelManager = FindObjectOfType<LevelManager>();
 
         rb.sharedMaterial = normalMat;
     }
@@ -46,47 +52,40 @@ public class PlayerController : MonoBehaviour
         PlayerMove();
 
         rb.velocity = Vector2.ClampMagnitude(rb.velocity, 20f);
-
-        //if (cam != null)
-        {
-            //cam.transform.position = new Vector3(cam.transform.position.x, Mathf.Lerp
-                //(cam.transform.position.y, transform.position.y + 3, 0.01f), -10);
-        }
     }
-
-    private void PlayerMove()
+    private void PlayerMove() // PLAYER MOVE
     {
         if (jumpForce == 0.0f && grounded && gI.valueX != 0)
         {
             rb.velocity = new Vector2(speed * gI.valueX, rb.velocity.y);
 
-            // Walking Sound Logic
-            if (Mathf.Abs(gI.valueX) > 0.1f)
+            // WALKING SFX LOGIC
+            //if (Mathf.Abs(gI.valueX) > 0.1f)
             {
                 //if (!walkAudioSource.isPlaying)
                 {
                     //walkAudioSource.Play();
                 }
             }
-            else
+            //else
             {
                 //walkAudioSource.Stop();
             }
         }
-        else // Stop the walk sound during jumps or when standing still
+        //else // STOPS THE WALK SOUND DURING JUMPS OR WHEN STANDING STILL 
         {
             //walkAudioSource.Stop();
         }
     }
 
-    private void Flip() // Player Flip 
+    private void Flip() // PLAYER DIRECTION FLIP
     {
-        if (gI.valueX < 0 && direction > 0)  // Check if moving left but facing right
+        if (gI.valueX < 0 && direction > 0)  // CHECK IF MOVING LEFT BUT FACING RIGHT 
         {
             transform.right = -transform.right;
             direction = -1;
         }
-        else if (gI.valueX > 0 && direction < 0) // Check if moving right but facing left
+        else if (gI.valueX > 0 && direction < 0) // CHECK IF MOVING RIGHT BUT FACING LEFT
         {
             transform.right = -transform.right;
             direction = 1;
@@ -95,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded => rb.IsTouching(groundContactFilter);
 
-    private void PlayerJump() // Player Jump
+    private void PlayerJump() // PLAYER JUMP
     {
         if (gI.jumpInput && IsGrounded)
         {
@@ -117,14 +116,14 @@ public class PlayerController : MonoBehaviour
         {
             float tempX;
 
-            if (IsGrounded) // Apply sideways force only if grounded
+            if (IsGrounded) // APPLY MOVEMENT ONLY WHEN GROUNDED
             {
                 tempX = gI.valueX * speed;
             }
 
             else
             {
-                tempX = 0.0f; // No sideways force in the air
+                tempX = 0.0f; // RESTRICT MOVEMENT WHILE MID-AIR
             }
 
             float tempY = jumpForce;
@@ -140,24 +139,40 @@ public class PlayerController : MonoBehaviour
             rb.sharedMaterial = normalMat;
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Trap")) // TRAP COLLISION CHECK
+        {
+            isAlive = false; // SET PLAYER'S HP TO ZERO
+        }
+        else if (collision.gameObject.CompareTag("Goal")) // GOAL COLLISION CHECK
+        {
+            levelManager.LoadNextLevel(); // CALL LOADNEXTLEVEL METHOD FROM LEVELMANAGER SCRIPT
+        }
+    }
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall") && collision.gameObject.layer == 6)
         {
-            //if (!bounceAudioSource.isPlaying) // Prevent overlapping sounds
+            //if (!bounceAudioSource.isPlaying) // PREVENT OVERLAPPING SFX
             {
                 //bounceAudioSource.Play();
             }
         }
     }
-    void Update()  // Add for checking falling  
+    void Update()  // IS PLAYER FALLING CHECK
     {
+        if (!isAlive && !isRespawning) //CHECK IF PLAYER'S HP IS ZERO AND NOT RESPAWING
+        {
+            StartCoroutine(Respawn());
+        }
+
         if (rb.velocity.y < -14f && !grounded)
         {
             //anim.SetBool("isFalling", true);
             //if (!flatAudioSource.isPlaying && !landAudioSource.isPlaying)
             {
-                //flatAudioSource.Play(); // Play the "flat" audio
+                //flatAudioSource.Play(); // PLAYS THE "FLAT AUDIO"
             }
         }
         else
@@ -183,15 +198,27 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    private IEnumerator Respawn() // PLAYER RESPAWN
+    {
+        isRespawning = true;
+
+        yield return new WaitForSeconds(respawnDelay); // PLAYER RESPAWN DELAY
+
+        transform.position = spawnPoint.position; // REPSAWN PLAYER BACK TO SPAWN POINT
+
+        isAlive = true; // RESET PLAYER'S HP BACK TO 1
+
+        isRespawning = false;
+    }
     private void SetMaterialForGroundedState(bool isGrounded)
     {
         if (isGrounded)
         {
-            rb.sharedMaterial = normalMat; // Default Physics Material
+            rb.sharedMaterial = normalMat; // PLAYER DEFAULT PHYSMAT
         }
         else
         {
-            rb.sharedMaterial = bounceMat; // Bounce Physics Material
+            rb.sharedMaterial = bounceMat; // PLAYER BOUNCE PHYSMAT
         }
     }
 

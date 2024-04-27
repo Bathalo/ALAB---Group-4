@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Level01_Camera : MonoBehaviour
+public class LevelCamera : MonoBehaviour
 {
     [SerializeField] private Camera cam;
 
