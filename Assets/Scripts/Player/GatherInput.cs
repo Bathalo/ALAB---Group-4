@@ -46,7 +46,9 @@ public class GatherInput : MonoBehaviour
     private void StartMove(InputAction.CallbackContext ctx)
     {
     moveInput = ctx.ReadValue<Vector2>(); // Read the Vector2 input value
-    //valueX = moveInput.x; // Extract the X component of the Vector2 input
+    //valueX = moveInput.x; // Extract the X component of the Vector2 
+    
+    // FLIP KEY 'A' AND 'D'
     if (Keyboard.current.dKey.isPressed)
     {
         valueX = 1;
@@ -59,6 +61,7 @@ public class GatherInput : MonoBehaviour
     {
         valueX = 0;
     }
+    
     }
 
     private void StopMove(InputAction.CallbackContext ctx)

@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded = false;
     private LevelManager levelManager; // LEVEL MANAGER REF
 
+    //KNOCKBACK FORCE
     public float KBForce;
     public float KBCounter;
     public float KBTotalTime;
@@ -58,20 +59,21 @@ public class PlayerController : MonoBehaviour
         PlayerMove();
 
         rb.velocity = Vector2.ClampMagnitude(rb.velocity, 20f);
-
+        
+        //KNOCKBACK FORCE, REFER TO Ball.cs FOR COLLISION
         if (KBCounter <= 0)
         {
-            Flip();
+            Flip(); //IF NOT HIT, CAN FLIP DIRECTION
         }
         else
         {
             if (KnockFromRight == true)
             {
-                rb.velocity = new Vector2(-KBForce,KBForce);
+                rb.velocity = new Vector2(-KBForce,KBForce); //KNOCKBACK TO THE LEFT
             }
             if (KnockFromRight == false)
             {
-                rb.velocity = new Vector2(KBForce,KBForce);
+                rb.velocity = new Vector2(KBForce,KBForce); //KNOCKBACK TO THE RIGHT
             }
             
             KBCounter -= Time.deltaTime;
@@ -114,6 +116,8 @@ public class PlayerController : MonoBehaviour
         //     transform.right = -transform.right;
         //     direction = 1;
         // }
+
+        //CANNOT MOVE ANYMORE, CAN ONLY FLIP DIRECTION
         if (gI.valueX < 0)
         {
             transform.right = -Vector2.right; // Face left
