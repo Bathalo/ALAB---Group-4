@@ -45,8 +45,20 @@ public class GatherInput : MonoBehaviour
 
     private void StartMove(InputAction.CallbackContext ctx)
     {
-        moveInput = ctx.ReadValue<Vector2>(); // Read the Vector2 input value
-        valueX = moveInput.x; // Extract the X component of the Vector2 input
+    moveInput = ctx.ReadValue<Vector2>(); // Read the Vector2 input value
+    //valueX = moveInput.x; // Extract the X component of the Vector2 input
+    if (Keyboard.current.dKey.isPressed)
+    {
+        valueX = 1;
+    }
+    else if (Keyboard.current.aKey.isPressed)
+    {
+        valueX = -1;
+    }
+    else
+    {
+        valueX = 0;
+    }
     }
 
     private void StopMove(InputAction.CallbackContext ctx)

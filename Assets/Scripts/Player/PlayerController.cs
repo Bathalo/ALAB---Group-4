@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     //public AudioSource flatAudioSource;
     //public AudioSource bounceAudioSource;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private GatherInput gI;
     //private Animator anim;
     private Jump jumpScript;
@@ -32,6 +32,12 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded = false;
     private LevelManager levelManager; // LEVEL MANAGER REF
 
+    public float KBForce;
+    public float KBCounter;
+    public float KBTotalTime;
+
+    public bool KnockFromRight;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -45,50 +51,76 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Flip();
+
         CheckStatus();
         SetMaterialForGroundedState(grounded); 
         PlayerJump();
         PlayerMove();
 
         rb.velocity = Vector2.ClampMagnitude(rb.velocity, 20f);
+
+        if (KBCounter <= 0)
+        {
+            Flip();
+        }
+        else
+        {
+            if (KnockFromRight == true)
+            {
+                rb.velocity = new Vector2(-KBForce,KBForce);
+            }
+            if (KnockFromRight == false)
+            {
+                rb.velocity = new Vector2(KBForce,KBForce);
+            }
+            
+            KBCounter -= Time.deltaTime;
+        }
     }
     private void PlayerMove() // PLAYER MOVE
     {
-        if (jumpForce == 0.0f && grounded && gI.valueX != 0)
-        {
-            rb.velocity = new Vector2(speed * gI.valueX, rb.velocity.y);
+        // if (jumpForce == 0.0f && grounded && gI.valueX != 0)
+        // {
+        //     rb.velocity = new Vector2(speed * gI.valueX, rb.velocity.y);
 
-            // WALKING SFX LOGIC
-            //if (Mathf.Abs(gI.valueX) > 0.1f)
-            {
-                //if (!walkAudioSource.isPlaying)
-                {
-                    //walkAudioSource.Play();
-                }
-            }
-            //else
-            {
-                //walkAudioSource.Stop();
-            }
-        }
-        //else // STOPS THE WALK SOUND DURING JUMPS OR WHEN STANDING STILL 
-        {
-            //walkAudioSource.Stop();
-        }
+        //     // WALKING SFX LOGIC
+        //     //if (Mathf.Abs(gI.valueX) > 0.1f)
+        //     {
+        //         //if (!walkAudioSource.isPlaying)
+        //         {
+        //             //walkAudioSource.Play();
+        //         }
+        //     }
+        //     //else
+        //     {
+        //         //walkAudioSource.Stop();
+        //     }
+        // }
+        // //else // STOPS THE WALK SOUND DURING JUMPS OR WHEN STANDING STILL 
+        // {
+        //     //walkAudioSource.Stop();
+        // }
     }
 
     private void Flip() // PLAYER DIRECTION FLIP
     {
-        if (gI.valueX < 0 && direction > 0)  // CHECK IF MOVING LEFT BUT FACING RIGHT 
+        // if (gI.valueX < 0 && direction > 0)  // CHECK IF MOVING LEFT BUT FACING RIGHT 
+        // {
+        //     transform.right = -transform.right;
+        //     direction = -1;
+        // }
+        // else if (gI.valueX > 0 && direction < 0) // CHECK IF MOVING RIGHT BUT FACING LEFT
+        // {
+        //     transform.right = -transform.right;
+        //     direction = 1;
+        // }
+        if (gI.valueX < 0)
         {
-            transform.right = -transform.right;
-            direction = -1;
+            transform.right = -Vector2.right; // Face left
         }
-        else if (gI.valueX > 0 && direction < 0) // CHECK IF MOVING RIGHT BUT FACING LEFT
-        {
-            transform.right = -transform.right;
-            direction = 1;
+        else if (gI.valueX > 0)
+        {   
+            transform.right = Vector2.right; // Face right
         }
     }
 
@@ -149,9 +181,10 @@ public class PlayerController : MonoBehaviour
         {
             levelManager.LoadNextLevel(); // CALL LOADNEXTLEVEL METHOD FROM LEVELMANAGER SCRIPT
         }
+
     }
     public void OnCollisionEnter2D(Collision2D collision)
-    {
+    {   
         if (collision.gameObject.CompareTag("Wall") && collision.gameObject.layer == 6)
         {
             //if (!bounceAudioSource.isPlaying) // PREVENT OVERLAPPING SFX
@@ -159,6 +192,11 @@ public class PlayerController : MonoBehaviour
                 //bounceAudioSource.Play();
             }
         }
+        else if (collision.gameObject.CompareTag("Pendulum"))
+        {
+            grounded = false;
+        }
+
     }
     void Update()  // IS PLAYER FALLING CHECK
     {
