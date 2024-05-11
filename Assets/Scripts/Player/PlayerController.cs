@@ -36,9 +36,9 @@ public class PlayerController : MonoBehaviour
     public float KBForce;
     public float KBCounter;
     public float KBTotalTime;
-
     public bool KnockFromRight;
-
+    public Dialogue dialogue;
+    public Dialogue2 dialogue2;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -185,7 +185,14 @@ public class PlayerController : MonoBehaviour
         {
             levelManager.LoadNextLevel(); // CALL LOADNEXTLEVEL METHOD FROM LEVELMANAGER SCRIPT
         }
-
+        else if (collision.gameObject.CompareTag("Dialogue"))
+        {
+            dialogue.gameObject.SetActive(true);
+        }
+        else if (collision.gameObject.CompareTag("Dialogue2"))
+        {
+            dialogue2.gameObject.SetActive(true);
+        }
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {   
