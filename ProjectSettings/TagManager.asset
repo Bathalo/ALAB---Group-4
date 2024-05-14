@@ -9,6 +9,8 @@ TagManager:
   - NPC
   - Goal
   - Trap
+  - Pendulum
+  - Dialogue
   layers:
   - Default
   - TransparentFX

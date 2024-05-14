@@ -9,12 +9,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForceThreshold = 15.0f;
 
     //public AudioSource walkAudioSource;      //IGNORE small case COMMENTS FOR NOW, THOSE ARE FOR FUTURE SFX AND PLAYER ANIMATION    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    //public AudioSource jumpAudioSource;
+    public AudioSource jumpAudioSource;
     //public AudioSource landAudioSource;
     //public AudioSource flatAudioSource;
-    //public AudioSource bounceAudioSource;
+    public AudioSource bounceAudioSource;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private GatherInput gI;
     //private Animator anim;
     private Jump jumpScript;
@@ -32,6 +32,11 @@ public class PlayerController : MonoBehaviour
     private bool wasGrounded = false;
     private LevelManager levelManager; // LEVEL MANAGER REF
 
+    //KNOCKBACK FORCE
+    public float KBForce;
+    public float KBCounter;
+    public float KBTotalTime;
+    public bool KnockFromRight;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -45,50 +50,79 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Flip();
+
         CheckStatus();
         SetMaterialForGroundedState(grounded); 
         PlayerJump();
         PlayerMove();
 
         rb.velocity = Vector2.ClampMagnitude(rb.velocity, 20f);
+        
+        //KNOCKBACK FORCE, REFER TO Ball.cs FOR COLLISION
+        if (KBCounter <= 0)
+        {
+            Flip(); //IF NOT HIT, CAN FLIP DIRECTION
+        }
+        else
+        {
+            if (KnockFromRight == true)
+            {
+                rb.velocity = new Vector2(-KBForce,KBForce); //KNOCKBACK TO THE LEFT
+            }
+            if (KnockFromRight == false)
+            {
+                rb.velocity = new Vector2(KBForce,KBForce); //KNOCKBACK TO THE RIGHT
+            }
+            
+            KBCounter -= Time.deltaTime;
+        }
     }
     private void PlayerMove() // PLAYER MOVE
     {
-        if (jumpForce == 0.0f && grounded && gI.valueX != 0)
-        {
-            rb.velocity = new Vector2(speed * gI.valueX, rb.velocity.y);
+        // if (jumpForce == 0.0f && grounded && gI.valueX != 0)
+        // {
+        //     rb.velocity = new Vector2(speed * gI.valueX, rb.velocity.y);
 
-            // WALKING SFX LOGIC
-            //if (Mathf.Abs(gI.valueX) > 0.1f)
-            {
-                //if (!walkAudioSource.isPlaying)
-                {
-                    //walkAudioSource.Play();
-                }
-            }
-            //else
-            {
-                //walkAudioSource.Stop();
-            }
-        }
-        //else // STOPS THE WALK SOUND DURING JUMPS OR WHEN STANDING STILL 
-        {
-            //walkAudioSource.Stop();
-        }
+        //     // WALKING SFX LOGIC
+        //     //if (Mathf.Abs(gI.valueX) > 0.1f)
+        //     {
+        //         //if (!walkAudioSource.isPlaying)
+        //         {
+        //             //walkAudioSource.Play();
+        //         }
+        //     }
+        //     //else
+        //     {
+        //         //walkAudioSource.Stop();
+        //     }
+        // }
+        // //else // STOPS THE WALK SOUND DURING JUMPS OR WHEN STANDING STILL 
+        // {
+        //     //walkAudioSource.Stop();
+        // }
     }
 
     private void Flip() // PLAYER DIRECTION FLIP
     {
-        if (gI.valueX < 0 && direction > 0)  // CHECK IF MOVING LEFT BUT FACING RIGHT 
+        // if (gI.valueX < 0 && direction > 0)  // CHECK IF MOVING LEFT BUT FACING RIGHT 
+        // {
+        //     transform.right = -transform.right;
+        //     direction = -1;
+        // }
+        // else if (gI.valueX > 0 && direction < 0) // CHECK IF MOVING RIGHT BUT FACING LEFT
+        // {
+        //     transform.right = -transform.right;
+        //     direction = 1;
+        // }
+
+        //CANNOT MOVE ANYMORE, CAN ONLY FLIP DIRECTION
+        if (gI.valueX < 0)
         {
-            transform.right = -transform.right;
-            direction = -1;
+            transform.right = -Vector2.right; // Face left
         }
-        else if (gI.valueX > 0 && direction < 0) // CHECK IF MOVING RIGHT BUT FACING LEFT
-        {
-            transform.right = -transform.right;
-            direction = 1;
+        else if (gI.valueX > 0)
+        {   
+            transform.right = Vector2.right; // Face right
         }
     }
 
@@ -131,7 +165,7 @@ public class PlayerController : MonoBehaviour
             Invoke("ResetJump", 0.025f);
             //anim.SetBool("isJumping", true);
             //anim.SetBool("isJumpCharging", false);
-            //jumpAudioSource.Play();
+            jumpAudioSource.Play();
         }
 
         if (rb.velocity.y <= -1)
@@ -151,14 +185,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     public void OnCollisionEnter2D(Collision2D collision)
-    {
+    {   
         if (collision.gameObject.CompareTag("Wall") && collision.gameObject.layer == 6)
         {
-            //if (!bounceAudioSource.isPlaying) // PREVENT OVERLAPPING SFX
+            if (!bounceAudioSource.isPlaying) // PREVENT OVERLAPPING SFX
             {
-                //bounceAudioSource.Play();
+                bounceAudioSource.Play();
             }
         }
+        else if (collision.gameObject.CompareTag("Pendulum"))
+        {
+            grounded = false;
+        }
+
     }
     void Update()  // IS PLAYER FALLING CHECK
     {
