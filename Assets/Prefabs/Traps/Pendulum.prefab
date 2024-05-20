@@ -133,7 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1fb111ea44572c646829530f165724c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
+  playerController: {fileID: 75340738555199653, guid: d29b953a52fe5e44997c24c4c9562e4b, type: 3}
 --- !u!1 &3769805999022127100
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +265,7 @@ HingeJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0.5}
-  m_ConnectedAnchor: {x: -2.6050003, y: 3.3930001}
+  m_ConnectedAnchor: {x: 0.93499994, y: 1.913}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
