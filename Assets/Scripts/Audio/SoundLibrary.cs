@@ -11,6 +11,13 @@ public class SoundLibrary : MonoBehaviour
 {
     public SoundEffect[] soundEffects;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        Debug.Log("SoundLibrary Loaded, Will not be Destroyed!");
+    }
+
     public AudioClip GetClipFromName(string name)
     {
         foreach (var soundEffect in soundEffects)

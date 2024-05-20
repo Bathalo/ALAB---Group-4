@@ -10,11 +10,29 @@ public class LevelManager : MonoBehaviour
     {
         Debug.Log("LevelManager Loaded, Will not be Destroyed!");
         DontDestroyOnLoad(gameObject);
+
+        // SUB TO SCENE
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void Start()
+    void OnDestroy()
     {
-        // DETERMINE CURRENT LEVEL INDEX BASED ON SCENE CURRENTLY LAODED
+        // UNSUBSCRIBE SCENE, TO AVOID MEMORY LEAKS
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // IF LOAD SCENE =/= MM, DETERMINE CURRENT LEVEL INDEX
+        if (scene.name != "MainMenu")
+        {
+            DetermineCurrentLevelIndex();
+        }
+    }
+
+    private void DetermineCurrentLevelIndex()
+    {
+        // DETERMINE CURRENT LEVEL INDEX BASED ON SCENE CURRENTLY LOADED
         for (int i = 0; i < levelNames.Length; i++)
         {
             if (SceneManager.GetActiveScene().name == levelNames[i])
@@ -29,12 +47,13 @@ public class LevelManager : MonoBehaviour
     {
         if (currentLevelIndex < levelNames.Length - 1)
         {
+            // LOAD NEXT LEVEL
             currentLevelIndex++;
             SceneManager.LoadScene(levelNames[currentLevelIndex]);
         }
         else
         {
-            Debug.Log("All levels completed!");
+            Debug.Log("All levels completed! GRATS!!!");
             // RESERVE LOGIC FOR WHEN ALL LEVELS ARE COMPLETED. (CONGRATULATION SPLASH SCREEN, CUTSCENE, ETC.)
         }
     }

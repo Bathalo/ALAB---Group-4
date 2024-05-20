@@ -13,6 +13,8 @@ public class LevelGoal : MonoBehaviour
     {
         // INITIAL POS
         initialPosition = transform.position;
+
+        gameObject.SetActive(true);
     }
 
     void Update()

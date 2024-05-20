@@ -7,7 +7,7 @@ public class InGameMenuController : MonoBehaviour
 
     void Start()
     {
-        inGameMenuPanel.SetActive(false); // Ensure menu is hidden at start
+        inGameMenuPanel.SetActive(false);
     }
 
     void Update()
@@ -20,17 +20,18 @@ public class InGameMenuController : MonoBehaviour
 
     public void ToggleMenu()
     {
-        inGameMenuPanel.SetActive(!inGameMenuPanel.activeSelf); // Toggle visibility
+        inGameMenuPanel.SetActive(!inGameMenuPanel.activeSelf); // TOGGLE
     }
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene("MainMenu"); // Replace "MainMenuScene" with your actual scene name
+        SceneManager.LoadScene("Level00");
     }
 
     public void ExitGame()
     {
         Debug.Log("Exiting Game...");
+
         Application.Quit();
     }
 }

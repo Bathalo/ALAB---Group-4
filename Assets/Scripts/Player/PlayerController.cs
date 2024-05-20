@@ -4,15 +4,17 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] public float speed;
+    [SerializeField] public float speed = 0.0f;
     [SerializeField] public float jumpForce = 0.0f;
-    [SerializeField] private float jumpForceThreshold = 15.0f;
+    [SerializeField] private float jumpForceThreshold = 0.0f;
+    [SerializeField] private float jumpCooldownDuration = 0.0f;
 
     //public AudioSource walkAudioSource;      //IGNORE small case COMMENTS FOR NOW, THOSE ARE FOR FUTURE SFX AND PLAYER ANIMATION    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     public AudioSource jumpAudioSource;
     //public AudioSource landAudioSource;
     //public AudioSource flatAudioSource;
     public AudioSource bounceAudioSource;
+    public AudioSource goalAudioSource;
 
     public Rigidbody2D rb;
     private GatherInput gI;
@@ -25,18 +27,22 @@ public class PlayerController : MonoBehaviour
     public ContactFilter2D groundContactFilter;
     public Transform spawnPoint; // PLAYER SPAWN REF
     public float respawnDelay = 1f; // PLAYER RESPAWN DELAY
-    private bool isAlive = true; // PLAYER HEALTH
+    public bool isAlive = true; // PLAYER HEALTH
     private bool isRespawning = false; // RESPAWNING CHECK
 
     private int direction = 1;
     private bool wasGrounded = false;
     private LevelManager levelManager; // LEVEL MANAGER REF
+    public float delayTime = 0.0f; // NEXT LEVEL DELAY TIME
 
     //KNOCKBACK FORCE
     public float KBForce;
     public float KBCounter;
     public float KBTotalTime;
     public bool KnockFromRight;
+    public bool canJump = true; // ADDING JUMP DELAY OF .5 MS
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -44,6 +50,7 @@ public class PlayerController : MonoBehaviour
         //anim = GetComponent<Animator>();
         jumpScript = GetComponent<Jump>();
         levelManager = FindObjectOfType<LevelManager>();
+
 
         rb.sharedMaterial = normalMat;
     }
@@ -77,6 +84,7 @@ public class PlayerController : MonoBehaviour
             KBCounter -= Time.deltaTime;
         }
     }
+
     private void PlayerMove() // PLAYER MOVE
     {
         // if (jumpForce == 0.0f && grounded && gI.valueX != 0)
@@ -130,7 +138,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerJump() // PLAYER JUMP
     {
-        if (gI.jumpInput && IsGrounded)
+        if (gI.jumpInput && IsGrounded && canJump)
         {
             jumpForce += 0.5f;
             rb.velocity = new Vector2(0.0f, rb.velocity.y);
@@ -166,6 +174,8 @@ public class PlayerController : MonoBehaviour
             //anim.SetBool("isJumping", true);
             //anim.SetBool("isJumpCharging", false);
             jumpAudioSource.Play();
+
+            StartCoroutine(JumpCooldown());
         }
 
         if (rb.velocity.y <= -1)
@@ -173,6 +183,7 @@ public class PlayerController : MonoBehaviour
             rb.sharedMaterial = normalMat;
         }
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Trap")) // TRAP COLLISION CHECK
@@ -181,9 +192,14 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Goal")) // GOAL COLLISION CHECK
         {
-            levelManager.LoadNextLevel(); // CALL LOADNEXTLEVEL METHOD FROM LEVELMANAGER SCRIPT
+            goalAudioSource.Play();
+
+            collision.gameObject.SetActive(false);
+
+            StartCoroutine(LoadNextLevelWithDelay()); // LOAD NEXT LEVEL WITH DELAY
         }
     }
+
     public void OnCollisionEnter2D(Collision2D collision)
     {   
         if (collision.gameObject.CompareTag("Wall") && collision.gameObject.layer == 6)
@@ -199,6 +215,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
     void Update()  // IS PLAYER FALLING CHECK
     {
         if (!isAlive && !isRespawning) //CHECK IF PLAYER'S HP IS ZERO AND NOT RESPAWING
@@ -237,6 +254,16 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator JumpCooldown() // ADDED JUMP COOLDOWN OF .5 MS
+    {
+        canJump = false;
+
+        yield return new WaitForSeconds(jumpCooldownDuration);
+
+        canJump = true;
+    }
+
     private IEnumerator Respawn() // PLAYER RESPAWN
     {
         isRespawning = true;
@@ -249,6 +276,14 @@ public class PlayerController : MonoBehaviour
 
         isRespawning = false;
     }
+
+    IEnumerator LoadNextLevelWithDelay() 
+    {
+        yield return new WaitForSeconds(delayTime);
+        levelManager.LoadNextLevel();   // CALL LOADNEXTLEVEL METHOD FROM LEVELMANAGER SCRIPT
+
+    }
+
     private void SetMaterialForGroundedState(bool isGrounded)
     {
         if (isGrounded)
@@ -266,6 +301,7 @@ public class PlayerController : MonoBehaviour
         grounded = rb.IsTouching(groundContactFilter);
         SetMaterialForGroundedState(grounded);
     }
+
     private void ResetJump()
     {
         jumpForce = 0.0f;

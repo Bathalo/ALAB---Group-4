@@ -11,13 +11,14 @@ public class EspadaDialogue : MonoBehaviour
     public float textSpeed;
     private int index;
     public PlayerController playerController;
+    public AudioSource typeSound;
+
     void Start()
     {
         textComponent.text = string.Empty;
         StartDialogue();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.E))
@@ -46,6 +47,11 @@ public class EspadaDialogue : MonoBehaviour
         foreach (char c in lines[index].ToCharArray())
         {
             textComponent.text += c;
+            if (typeSound != null) 
+            { 
+                typeSound.Play(); 
+            }
+
             yield return new WaitForSeconds(textSpeed);
         }
     }

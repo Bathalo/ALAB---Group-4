@@ -9,14 +9,18 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        void Awake()
         {
-            Destroy(gameObject);
-        }
-        else
-        {
+            if (Instance != null && Instance != this) 
+            {
+                Destroy(gameObject);
+                return;
+            }
             Instance = this;
+
             DontDestroyOnLoad(gameObject);
+
+            Debug.Log("SoundManager Loaded, Will not be Destroyed!");
         }
     }
 
@@ -40,7 +44,7 @@ public class SoundManager : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
-        // You might need to adjust this depending on how you play SFX
+
         sfx2DSource.volume = volume;
     }
 }
