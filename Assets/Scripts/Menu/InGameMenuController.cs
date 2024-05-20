@@ -26,6 +26,17 @@ public class InGameMenuController : MonoBehaviour
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("Level00");
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null ) 
+        {
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            if (playerController != null) 
+            {
+                playerController.ResetPlayerState();
+            }
+        }
+
     }
 
     public void ExitGame()

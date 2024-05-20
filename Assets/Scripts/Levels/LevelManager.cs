@@ -5,6 +5,7 @@ public class LevelManager : MonoBehaviour
 {
     public string[] levelNames; // ARRAY FOR LEVEL NAMES
     private int currentLevelIndex = 0;
+    private PlayerController playerController;
 
     void Awake()
     {
@@ -13,6 +14,12 @@ public class LevelManager : MonoBehaviour
 
         // SUB TO SCENE
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerController = player.GetComponent<PlayerController>();
+        }
     }
 
     void OnDestroy()
@@ -27,6 +34,11 @@ public class LevelManager : MonoBehaviour
         if (scene.name != "MainMenu")
         {
             DetermineCurrentLevelIndex();
+
+            if (playerController != null) 
+            { 
+                playerController.ResetPlayerState();
+            }
         }
     }
 

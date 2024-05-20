@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         jumpScript = GetComponent<Jump>();
         levelManager = FindObjectOfType<LevelManager>();
 
-
+        ResetPlayerState();
         rb.sharedMaterial = normalMat;
     }
 
@@ -135,6 +135,15 @@ public class PlayerController : MonoBehaviour
     }
 
     public bool IsGrounded => rb.IsTouching(groundContactFilter);
+
+    public void ResetPlayerState()
+    {
+        KBCounter = 0;
+        KnockFromRight = false;
+        // RESERVE FOR OTHER POSSIBLE VARIABLE
+
+        Debug.Log("PLAYER RESEEEEEEEEEEET!");
+    }
 
     private void PlayerJump() // PLAYER JUMP
     {
