@@ -10,6 +10,7 @@ public class JavelinTrap : MonoBehaviour
     [SerializeField] private float javelinLifetime = 4f; // LIFETIME
     [SerializeField] private AudioSource shootAudioSource; // SHOOT AUDIO
 
+
     private AudioSource audioSource;
     private GameObject currentJavelin;
 
@@ -62,5 +63,6 @@ public class JavelinTrap : MonoBehaviour
                 player.isAlive = false; // "KILLS" PLAYER
             }
         }
+
     }
 }

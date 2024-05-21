@@ -11,41 +11,40 @@ public class NewBehaviourScript : MonoBehaviour
     public float rightAngle;
 
     bool movingClockwise;
-    // Start is called before the first frame update
+
     void Start()
     {
         rgb2d = GetComponent<Rigidbody2D>();
         movingClockwise = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Move();
+        MaintainSwing();
     }
 
-    public void ChangeMoveDir()
+    void ChangeMoveDir()
     {
-        if(transform.rotation.z > rightAngle)
+        float zRotation = transform.eulerAngles.z;
+
+        if (zRotation > 180) zRotation -= 360;
+
+        if (zRotation > rightAngle)
         {
             movingClockwise = false;
         }
-        else if (transform.rotation.z < leftAngle)
+        else if (zRotation < leftAngle)
         {
             movingClockwise = true;
         }
     }
 
-    public void Move()
+    void MaintainSwing()
     {
         ChangeMoveDir();
-        if(movingClockwise)
-        {
-            rgb2d.angularVelocity = moveSpeed;
-        }
-        else
-        {
-            rgb2d.angularVelocity = -1*moveSpeed;
-        }
+        float targetAngularVelocity = movingClockwise ? moveSpeed : -moveSpeed;
+        rgb2d.angularVelocity = Mathf.Lerp(rgb2d.angularVelocity, targetAngularVelocity, Time.fixedDeltaTime * 5);
+        float torque = movingClockwise ? moveSpeed * 0.1f : -moveSpeed * 0.1f;
+        rgb2d.AddTorque(torque);
     }
 }

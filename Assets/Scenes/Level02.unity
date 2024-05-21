@@ -268,19 +268,39 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1302027549120651028, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
       propertyPath: m_ConnectedAnchor.x
-      value: 0
+      value: -0.012000263
       objectReference: {fileID: 0}
     - target: {fileID: 1302027549120651028, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
       propertyPath: m_ConnectedAnchor.y
-      value: 2.98
+      value: 2.875
       objectReference: {fileID: 0}
     - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.988
       objectReference: {fileID: 0}
     - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
       propertyPath: m_LocalPosition.y
+      value: 0.895
+      objectReference: {fileID: 0}
+    - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: m_LocalRotation.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3013625165919696458, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 4623005162895802530, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
       propertyPath: hitAudioSource
@@ -290,6 +310,14 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 106773841}
+    - target: {fileID: 5850215608779629248, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: leftAngle
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5850215608779629248, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
+      propertyPath: rightAngle
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 7555794496436149319, guid: c1dda365c9261e14b8b5947fbc455124, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
