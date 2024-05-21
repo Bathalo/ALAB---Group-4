@@ -11,6 +11,7 @@ TagManager:
   - Trap
   - Pendulum
   - Dialogue
+  - JavelinTrap
   layers:
   - Default
   - TransparentFX

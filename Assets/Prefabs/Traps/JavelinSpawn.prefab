@@ -76,8 +76,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d85cff5b1b8f40459b6c5a13d232559, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 0}
   javelinPrefab: {fileID: 7066524783336299056, guid: 0b038a356e689874abf2a598ea83f9a2, type: 3}
   spawnPoint: {fileID: 71090802129797707}
   shootInterval: 4
   javelinSpeed: 10
   javelinLifetime: 1
+  shootAudioSource: {fileID: 0}
+  hitAudioSource: {fileID: 0}

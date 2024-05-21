@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8463232421522647316}
   m_Layer: 11
   m_Name: Javelin
-  m_TagString: Trap
+  m_TagString: JavelinTrap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

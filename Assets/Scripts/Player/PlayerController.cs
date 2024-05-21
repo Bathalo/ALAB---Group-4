@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForceThreshold = 0.0f;
     [SerializeField] private float jumpCooldownDuration = 0.0f;
 
+    [SerializeField] private AudioSource hitAudioSource;
+
     //public AudioSource walkAudioSource;      //IGNORE small case COMMENTS FOR NOW, THOSE ARE FOR FUTURE SFX AND PLAYER ANIMATION    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     public AudioSource jumpAudioSource;
     //public AudioSource landAudioSource;
@@ -206,6 +208,15 @@ public class PlayerController : MonoBehaviour
             collision.gameObject.SetActive(false);
 
             StartCoroutine(LoadNextLevelWithDelay()); // LOAD NEXT LEVEL WITH DELAY
+        }
+
+        if (collision.gameObject.CompareTag("JavelinTrap"))
+        {
+            isAlive = false; 
+            if (hitAudioSource != null)
+            {   
+                hitAudioSource.Play();
+            }
         }
     }
 
