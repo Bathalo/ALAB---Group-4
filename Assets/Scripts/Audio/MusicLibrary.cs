@@ -9,7 +9,7 @@ public struct MusicTrack
 
 public class MusicLibrary : MonoBehaviour
 {
-    public MusicTrack[] tracks;
+    public MusicTrack[] tracks; // TRACK CLIPS
 
     public AudioClip GetClipFromName(string trackName)
     {
