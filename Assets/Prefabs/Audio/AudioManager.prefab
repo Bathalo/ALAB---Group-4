@@ -267,6 +267,8 @@ GameObject:
   - component: {fileID: 8051029913350507658}
   - component: {fileID: 8233520573111374178}
   - component: {fileID: 2605421902317232185}
+  - component: {fileID: 8968696753372750400}
+  - component: {fileID: 715927496786603347}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -324,3 +326,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxLibrary: {fileID: 8233520573111374178}
   sfx2DSource: {fileID: 1740046957836858205}
+--- !u!114 &8968696753372750400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8442352672706365098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a7381084aa38834eb5849a23346914d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tracks:
+  - trackName: Level00_BGM
+    clip: {fileID: 8300000, guid: 32105628f73bdc74b8dffce7d8e4891d, type: 3}
+  - trackName: Level01_BGM
+    clip: {fileID: 8300000, guid: 97e0462b5e915134985529f47ebdf2d1, type: 3}
+--- !u!114 &715927496786603347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8442352672706365098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39405d06a9aaf42b06e80ced3ffe87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicLibrary: {fileID: 8968696753372750400}
+  musicSource: {fileID: 3508078287660364728}
+  mainMenuSceneName: Level00
+  gameplayTrackName: Level01_BGM
