@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class JavelinTrap : MonoBehaviour
 {
-    [SerializeField] private GameObject javelinPrefab; // The javelin prefab to instantiate
-    [SerializeField] private Transform spawnPoint; // The spawn point of the javelin
-    [SerializeField] private float shootInterval = 4f; // Interval between each shot
-    [SerializeField] private float javelinSpeed = 10f; // Speed of the javelin
-    [SerializeField] private float javelinLifetime = 4f; // How long the javelin lasts before it disappears
+    [SerializeField] private GameObject javelinPrefab; 
+    [SerializeField] private Transform spawnPoint; // SHOOT POINT
+    [SerializeField] private float shootInterval = 4f; // SHOOT INTERVAL
+    [SerializeField] private float javelinSpeed = 10f; // SPEED
+    [SerializeField] private float javelinLifetime = 4f; // LIFETIME
+    [SerializeField] private AudioSource shootAudioSource; // SHOOT AUDIO
 
+    private AudioSource audioSource;
     private GameObject currentJavelin;
 
     void Start()
@@ -27,20 +29,26 @@ public class JavelinTrap : MonoBehaviour
 
     private void ShootJavelin()
     {
-        // Destroy the previous javelin if it exists
+        // DESTROY JAVELIN
         if (currentJavelin != null)
         {
             Destroy(currentJavelin);
         }
 
-        // Instantiate the new javelin
+        // NEW JAVELIN
         currentJavelin = Instantiate(javelinPrefab, spawnPoint.position, spawnPoint.rotation);
 
-        // Give the javelin a velocity to move it left
+        // JAVELINE VELOCITY 
         Rigidbody2D rb = currentJavelin.GetComponent<Rigidbody2D>();
         rb.velocity = Vector2.left * javelinSpeed;
 
-        // Destroy the javelin after its lifetime expires
+        // SHOOT AUDIO
+        if (shootAudioSource != null)
+        {
+            shootAudioSource.Play();
+        }
+
+        // JAVELINE LIFETIME
         Destroy(currentJavelin, javelinLifetime);
     }
 
@@ -51,7 +59,7 @@ public class JavelinTrap : MonoBehaviour
             PlayerController player = collision.GetComponent<PlayerController>();
             if (player != null)
             {
-                player.isAlive = false; // Set player's alive status to false
+                player.isAlive = false; // "KILLS" PLAYER
             }
         }
     }

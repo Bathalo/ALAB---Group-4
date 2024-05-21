@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 
     public Rigidbody2D rb;
     private GatherInput gI;
-    //private Animator anim;
+    private Animator anim;
     private Jump jumpScript;
 
     public bool grounded;
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         gI = GetComponent<GatherInput>();
-        //anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
         jumpScript = GetComponent<Jump>();
         levelManager = FindObjectOfType<LevelManager>();
 
@@ -153,14 +153,14 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(0.0f, rb.velocity.y);
             preJump = true;
 
-            //anim.SetBool("isJumpCharging", true);
-            //anim.SetBool("isJumping", false);
+            anim.SetBool("isJumpCharging", true);
+            anim.SetBool("isJumping", false);
         }
 
         else
         {
             preJump = false;
-            //anim.SetBool("isJumpCharging", false);
+            anim.SetBool("isJumpCharging", false);
         }
 
         if (gI.jumpInput && IsGrounded && jumpForce >= jumpForceThreshold || gI.jumpInput == false && jumpForce >= 0.1f)
@@ -180,8 +180,8 @@ public class PlayerController : MonoBehaviour
             float tempY = jumpForce;
             rb.velocity = new Vector2(tempX, tempY);
             Invoke("ResetJump", 0.025f);
-            //anim.SetBool("isJumping", true);
-            //anim.SetBool("isJumpCharging", false);
+            anim.SetBool("isJumping", true);
+            anim.SetBool("isJumpCharging", false);
             jumpAudioSource.Play();
 
             StartCoroutine(JumpCooldown());
@@ -234,7 +234,7 @@ public class PlayerController : MonoBehaviour
 
         if (rb.velocity.y < -14f && !grounded)
         {
-            //anim.SetBool("isFalling", true);
+            anim.SetBool("isFalling", true);
             //if (!flatAudioSource.isPlaying && !landAudioSource.isPlaying)
             {
                 //flatAudioSource.Play(); // PLAYS THE "FLAT AUDIO"
@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //anim.SetBool("isFalling", false);
+            anim.SetBool("isFalling", false);
 
             if (IsGrounded)
             {

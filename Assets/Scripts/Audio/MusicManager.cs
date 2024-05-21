@@ -10,6 +10,7 @@ public class MusicManager : MonoBehaviour
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private string mainMenuSceneName = "Level00"; // MAIN MENU SCENE 
     [SerializeField] private string gameplayTrackName = "GameplayMusic"; // BGM FOR LEVELS
+    [SerializeField][Range(0, 1)] private float defaultVolume = 1f;
 
     private void Awake()
     {
@@ -22,6 +23,12 @@ public class MusicManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    private void Start()
+    {
+        // INITIAL VOLUME VALUE
+        musicSource.volume = defaultVolume;
     }
 
     private void OnEnable()
@@ -61,10 +68,11 @@ public class MusicManager : MonoBehaviour
     IEnumerator AnimateMusicCrossfade(AudioClip nextTrack, float fadeDuration = 0.5f)
     {
         float percent = 0;
+        float startVolume = musicSource.volume;
         while (percent < 1)
         {
             percent += Time.deltaTime * 1 / fadeDuration;
-            musicSource.volume = Mathf.Lerp(1f, 0, percent);
+            musicSource.volume = Mathf.Lerp(startVolume, 0, percent);
             yield return null;
         }
 
@@ -75,7 +83,7 @@ public class MusicManager : MonoBehaviour
         while (percent < 1)
         {
             percent += Time.deltaTime * 1 / fadeDuration;
-            musicSource.volume = Mathf.Lerp(0, 1f, percent);
+            musicSource.volume = Mathf.Lerp(0, defaultVolume, percent);
             yield return null;
         }
     }
@@ -83,10 +91,11 @@ public class MusicManager : MonoBehaviour
     IEnumerator AnimateMusicFadeOut(float fadeDuration = 0.5f)
     {
         float percent = 0;
+        float startVolume = musicSource.volume;
         while (percent < 1)
         {
             percent += Time.deltaTime * 1 / fadeDuration;
-            musicSource.volume = Mathf.Lerp(1f, 0, percent);
+            musicSource.volume = Mathf.Lerp(startVolume, 0, percent);
             yield return null;
         }
 

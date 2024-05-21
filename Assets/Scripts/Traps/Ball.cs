@@ -5,6 +5,7 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     public PlayerController playerController;
+    [SerializeField] private AudioSource hitAudioSource;
 
     private void OnCollisionEnter2D (Collision2D collision)
     {
@@ -18,6 +19,12 @@ public class Ball : MonoBehaviour
             if (collision.transform.position.x > transform.position.x)
             {
                 playerController.KnockFromRight = false;
+            }
+
+            // HIT AUDIO 
+            if (hitAudioSource != null)
+            {
+                hitAudioSource.Play();
             }
         }
     }

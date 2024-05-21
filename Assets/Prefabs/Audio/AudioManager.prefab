@@ -359,3 +359,4 @@ MonoBehaviour:
   musicSource: {fileID: 3508078287660364728}
   mainMenuSceneName: Level00
   gameplayTrackName: Level01_BGM
+  defaultVolume: 0.2
