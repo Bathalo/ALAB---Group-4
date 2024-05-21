@@ -58,11 +58,11 @@ public class GatherInput : MonoBehaviour
     //valueX = moveInput.x; // Extract the X component of the Vector2 
     
     // FLIP KEY 'A' AND 'D'
-    if (Keyboard.current.dKey.isPressed)
+    if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
     {
         valueX = 1;
     }
-    else if (Keyboard.current.aKey.isPressed)
+    else if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
     {
         valueX = -1;
     }
